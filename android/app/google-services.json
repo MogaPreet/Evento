@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "855604455537",
+    "project_id": "eventouserauth",
+    "storage_bucket": "eventouserauth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855604455537:android:ee864cd77cd701f45e93d0",
+        "android_client_info": {
+          "package_name": "com.example.email_password_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855604455537-66a3mpv58aqlcnld8nic7ahmv3o8j00v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.email_password_login",
+            "certificate_hash": "2c3c60ff43e29996a82686b1c9d28c4191c076b6"
+          }
+        },
+        {
+          "client_id": "855604455537-7l5req3555pojf0ii843hqfv0dbdr7j6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnfG3IG3eLnyPWmbukwqtCZlES2Dy7cks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855604455537-7l5req3555pojf0ii843hqfv0dbdr7j6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
