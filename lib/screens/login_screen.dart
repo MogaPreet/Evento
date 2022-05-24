@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:email_password_login/admin/event_form.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -177,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successfully"),
                 Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomeScreen())),
+                    MaterialPageRoute(builder: (context) => createEvent())),
               })
           .catchError((error) {
         switch (error.code) {
