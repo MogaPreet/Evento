@@ -160,13 +160,17 @@ class _registrationState extends State<registration> {
           onPressed: () async {
             if (isLoading) return;
             setState(() => isLoading = true);
-            await Future.delayed(Duration(seconds: 5));
+            await Future.delayed(Duration(seconds: 2));
             setState(() => isLoading = false);
             signUp(emailEditingController.text, passwordEditingController.text);
           },
           child: isLoading
-              ? CircularProgressIndicator(
-                  color: Colors.white,
+              ? SizedBox(
+                  width: 200.0,
+                  height: 200.0,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
                 )
               : Text(
                   "Sign Up",

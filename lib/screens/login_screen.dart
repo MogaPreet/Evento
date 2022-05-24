@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
             setState(() => isLoading = true);
-            await Future.delayed(Duration(seconds: 3));
+            await Future.delayed(Duration(seconds: 1));
 
             setState(() {
               signIn(emailController.text, passwordController.text);

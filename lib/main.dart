@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Auth',
+      title: 'Evento',
       theme: ThemeData(
         primaryColor: Colors.white,
         textTheme: GoogleFonts.latoTextTheme(
