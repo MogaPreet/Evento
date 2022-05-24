@@ -11,107 +11,137 @@ class createEvent extends StatefulWidget {
 }
 
 class _createEventState extends State<createEvent> {
-  String level = "Female";
+  String level = "Compitition";
   PickedFile? _imagefile;
   final ImagePicker _picker = ImagePicker();
 
+  final TextEditingController eventNameController = new TextEditingController();
+  final TextEditingController eventDescController = new TextEditingController();
+
+  String dropdownvalue = 'SBMP';
+  var college = [
+    'SBMP',
+    'Mithibai',
+    'NMIMS',
+    'DJSCV',
+    'NM',
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: 15,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Profile Details",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFfa8919),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            imageProfile(),
-            SizedBox(
-              height: 25,
-            ),
-            nameTextField(),
-            SizedBox(
-              height: 15,
-            ),
-            workexperinecTextField(),
-            SizedBox(
-              height: 15,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Stiching done for:",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Row(
-                  children: [
-                    Text("Male"),
-                    Radio(
-                        value: "Male",
-                        groupValue: level,
-                        onChanged: (value) {
-                          setState(() {
-                            level = value.toString();
-                          });
-                        }),
-                    SizedBox(
-                      width: 10.0,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+          child: ListView(
+            children: <Widget>[
+              SizedBox(
+                height: 15,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Add Event",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFfa8919),
                     ),
-                    Text("Female"),
-                    Radio(
-                        value: "Female",
-                        groupValue: level,
-                        onChanged: (value) {
-                          setState(() {
-                            level = value.toString();
-                          });
-                        }),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TypesofoutfitsTextField(),
-            SizedBox(
-              height: 15,
-            ),
-            SpecialistInTextField(),
-            SizedBox(
-              height: 30,
-            ),
-            CreateProfileButton(),
-          ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              EventImage(),
+              SizedBox(
+                height: 25,
+              ),
+              eventName(),
+              SizedBox(
+                height: 15,
+              ),
+              eventDesc(),
+              SizedBox(
+                height: 15,
+              ),
+              collegeSelect(),
+              SizedBox(
+                height: 15,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Event Category: ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Row(
+                    children: [
+                      Text("Compition"),
+                      Radio(
+                          value: "comp",
+                          groupValue: level,
+                          onChanged: (value) {
+                            setState(() {
+                              level = value.toString();
+                            });
+                          }),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      Text("Hackathon"),
+                      Radio(
+                          value: "hack",
+                          groupValue: level,
+                          onChanged: (value) {
+                            setState(() {
+                              level = value.toString();
+                            });
+                          }),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      Text("Food & Music"),
+                      Radio(
+                          value: "dj",
+                          groupValue: level,
+                          onChanged: (value) {
+                            setState(() {
+                              level = value.toString();
+                            });
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              TypesofoutfitsTextField(),
+              SizedBox(
+                height: 15,
+              ),
+              SpecialistInTextField(),
+              SizedBox(
+                height: 20,
+              ),
+              CreateProfileButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget imageProfile() {
+  Widget EventImage() {
     return Center(
       child: Stack(
         children: <Widget>[
@@ -153,7 +183,7 @@ class _createEventState extends State<createEvent> {
       child: Column(
         children: <Widget>[
           Text(
-            "Choose Profile photo",
+            "Choose Event photo",
             style: TextStyle(
               fontSize: 20.0,
             ),
@@ -191,49 +221,104 @@ class _createEventState extends State<createEvent> {
     });
   }
 
-  Widget nameTextField() {
+  Widget eventName() {
     return TextFormField(
+      controller: eventNameController,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFfa8919),
+            color: Colors.black,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Color(0xFFfa8919)),
-          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
         ),
         prefixIcon: Icon(
-          Icons.store,
+          Icons.event_available_outlined,
           color: Colors.black,
         ),
-        labelText: "Shop Name",
-        helperText: "Shop Name can't be empty",
-        hintText: "Shop Name",
+        hintText: "Event Name",
       ),
     );
   }
 
-  Widget workexperinecTextField() {
+  Widget eventDesc() {
     return TextFormField(
+      controller: eventDescController,
+      minLines: 1,
+      maxLines: 10,
+      keyboardType: TextInputType.multiline,
+      onChanged: (val) {
+        final trimVal = val.trim();
+        if (val != trimVal)
+          setState(() {
+            eventDescController.text = trimVal;
+            eventDescController.selection = TextSelection.fromPosition(
+                TextPosition(offset: trimVal.length));
+          });
+      },
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFfa8919),
+            color: Colors.black,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Color(0xFFfa8919)),
-          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
         ),
         prefixIcon: Icon(
-          Icons.access_time_filled,
+          Icons.description_outlined,
           color: Colors.black,
         ),
-        labelText: "Experience",
-        helperText: "Work Experience can't be empty",
-        hintText: "Work Experience",
+        hintText: "Event Description",
       ),
+    );
+  }
+
+  Widget collegeSelect() {
+    return Column(
+      children: [
+        Text("Choose College"),
+        SizedBox(
+          height: 10,
+        ),
+        DecoratedBox(
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(50)),
+          child: Padding(
+            padding: EdgeInsets.only(left: 30, right: 30),
+            child: DropdownButton(
+              // Initial Value
+              value: dropdownvalue,
+              style: TextStyle(color: Colors.white),
+              underline: Container(),
+              borderRadius: BorderRadius.circular(5),
+              isExpanded: true,
+              dropdownColor: Colors.black,
+              // Down Arrow Icon
+
+              icon: const Icon(Icons.keyboard_arrow_down),
+
+              // Array list of items
+              items: college.map((String college) {
+                return DropdownMenuItem(
+                  value: college,
+                  child: Text(college),
+                );
+              }).toList(),
+              // After selecting the desired option,it will
+              // change button value to selected value
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownvalue = newValue!;
+                });
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -245,7 +330,7 @@ class _createEventState extends State<createEvent> {
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFfa8919),
+            color: Colors.black,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -257,7 +342,6 @@ class _createEventState extends State<createEvent> {
           color: Colors.black,
         ),
         labelText: "Type of Clothes",
-        helperText: "Type of Clothes stich can't be empty",
         hintText: "Types of Clothes stich",
       ),
     );
@@ -287,22 +371,25 @@ class _createEventState extends State<createEvent> {
   }
 
   Widget CreateProfileButton() {
-    return Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(25),
-      color: Color(0xFFfa8919),
-      child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
-        },
-        child: Text(
-          "Create Profile",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(25),
+        color: Color(0xFFfa8919),
+        child: MaterialButton(
+          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          minWidth: MediaQuery.of(context).size.width,
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+          child: Text(
+            "Add Event",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
