@@ -25,6 +25,7 @@ class _createEventState extends State<createEvent> {
     'NMIMS',
     'DJSCV',
     'NM',
+    'Ritu'
   ];
 
   @override
