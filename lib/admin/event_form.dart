@@ -341,7 +341,7 @@ class _createEventState extends State<createEvent> {
           Icons.checkroom,
           color: Colors.black,
         ),
-        labelText: "Type of Clothes",
+        labelText: "Name of the dep",
         hintText: "Types of Clothes stich",
       ),
     );
