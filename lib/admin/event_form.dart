@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:email_password_login/admin/event_Date.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,8 +16,9 @@ class _createEventState extends State<createEvent> {
   PickedFile? _imagefile;
   final ImagePicker _picker = ImagePicker();
 
-  final TextEditingController eventNameController = new TextEditingController();
-  final TextEditingController eventDescController = new TextEditingController();
+  final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController eventDescController = TextEditingController();
+  final TextEditingController eventVenueController = TextEditingController();
 
   String dropdownvalue = 'SBMP';
   var college = [
@@ -27,6 +29,15 @@ class _createEventState extends State<createEvent> {
     'NM',
   ];
 
+  String dropdownvaluecate = 'Dance and Music';
+  var category = [
+    'Dance and Music',
+    'Technical Event',
+    'Compitition',
+    'Live Shows',
+    'Movie Promotion',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,13 +46,13 @@ class _createEventState extends State<createEvent> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
           child: ListView(
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: const <Widget>[
                   Text(
                     "Add Event",
                     textAlign: TextAlign.center,
@@ -53,84 +64,39 @@ class _createEventState extends State<createEvent> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               EventImage(),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               eventName(),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               eventDesc(),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               collegeSelect(),
+              const SizedBox(
+                height: 15,
+              ),
+              selectCategory(),
+              const SizedBox(
+                height: 15,
+              ),
+              selectDate(),
               SizedBox(
                 height: 15,
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Event Category: ",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Row(
-                    children: [
-                      Text("Compition"),
-                      Radio(
-                          value: "comp",
-                          groupValue: level,
-                          onChanged: (value) {
-                            setState(() {
-                              level = value.toString();
-                            });
-                          }),
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      Text("Hackathon"),
-                      Radio(
-                          value: "hack",
-                          groupValue: level,
-                          onChanged: (value) {
-                            setState(() {
-                              level = value.toString();
-                            });
-                          }),
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      Text("Food & Music"),
-                      Radio(
-                          value: "dj",
-                          groupValue: level,
-                          onChanged: (value) {
-                            setState(() {
-                              level = value.toString();
-                            });
-                          }),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
+              eventFees(),
+              const SizedBox(
                 height: 15,
               ),
-              TypesofoutfitsTextField(),
-              SizedBox(
-                height: 15,
-              ),
-              SpecialistInTextField(),
-              SizedBox(
+              eventVenue(),
+              const SizedBox(
                 height: 20,
               ),
               CreateProfileButton(),
@@ -160,7 +126,7 @@ class _createEventState extends State<createEvent> {
                   builder: ((builder) => bottomSheet()),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.add_a_photo_rounded,
                 color: Colors.black,
                 size: 28,
@@ -176,35 +142,35 @@ class _createEventState extends State<createEvent> {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "Choose Event photo",
             style: TextStyle(
               fontSize: 20.0,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
             FlatButton.icon(
-              icon: Icon(Icons.camera),
+              icon: const Icon(Icons.camera),
               onPressed: () {
                 takePhoto(ImageSource.camera);
               },
-              label: Text("Camera"),
+              label: const Text("Camera"),
             ),
             FlatButton.icon(
-              icon: Icon(Icons.image),
+              icon: const Icon(Icons.image),
               onPressed: () {
                 takePhoto(ImageSource.gallery);
               },
-              label: Text("Gallery"),
+              label: const Text("Gallery"),
             ),
           ])
         ],
@@ -225,7 +191,7 @@ class _createEventState extends State<createEvent> {
     return TextFormField(
       controller: eventNameController,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,
           ),
@@ -234,7 +200,7 @@ class _createEventState extends State<createEvent> {
           borderSide: const BorderSide(width: 2, color: Colors.black),
           borderRadius: BorderRadius.circular(5.0),
         ),
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.event_available_outlined,
           color: Colors.black,
         ),
@@ -249,17 +215,8 @@ class _createEventState extends State<createEvent> {
       minLines: 1,
       maxLines: 10,
       keyboardType: TextInputType.multiline,
-      onChanged: (val) {
-        final trimVal = val.trim();
-        if (val != trimVal)
-          setState(() {
-            eventDescController.text = trimVal;
-            eventDescController.selection = TextSelection.fromPosition(
-                TextPosition(offset: trimVal.length));
-          });
-      },
       decoration: InputDecoration(
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,
           ),
@@ -268,7 +225,7 @@ class _createEventState extends State<createEvent> {
           borderSide: const BorderSide(width: 2, color: Colors.black),
           borderRadius: BorderRadius.circular(5.0),
         ),
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.description_outlined,
           color: Colors.black,
         ),
@@ -280,19 +237,19 @@ class _createEventState extends State<createEvent> {
   Widget collegeSelect() {
     return Column(
       children: [
-        Text("Choose College"),
-        SizedBox(
+        const Text("Choose College"),
+        const SizedBox(
           height: 10,
         ),
         DecoratedBox(
           decoration: BoxDecoration(
               color: Colors.black, borderRadius: BorderRadius.circular(50)),
           child: Padding(
-            padding: EdgeInsets.only(left: 30, right: 30),
+            padding: const EdgeInsets.only(left: 30, right: 30),
             child: DropdownButton(
               // Initial Value
               value: dropdownvalue,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               underline: Container(),
               borderRadius: BorderRadius.circular(5),
               isExpanded: true,
@@ -322,50 +279,104 @@ class _createEventState extends State<createEvent> {
     );
   }
 
-  Widget TypesofoutfitsTextField() {
+  Widget eventFees() {
     return TextFormField(
-      keyboardType: TextInputType.multiline,
-      minLines: 1,
-      maxLines: 3,
+      controller: eventNameController,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 2, color: Colors.black),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          prefixIcon: const Icon(
+            Icons.currency_rupee_outlined,
+            color: Colors.green,
+          ),
+          hintText: "Event Fees",
+          labelText: 'if any'),
+    );
+  }
+
+  Widget selectCategory() {
+    return Column(
+      children: [
+        const Text("Choose Category"),
+        const SizedBox(
+          height: 10,
+        ),
+        DecoratedBox(
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(50)),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: DropdownButton(
+              // Initial Value
+              value: dropdownvaluecate,
+              style: const TextStyle(color: Colors.white),
+              underline: Container(),
+              borderRadius: BorderRadius.circular(5),
+              isExpanded: true,
+              dropdownColor: Colors.black,
+              // Down Arrow Icon
+
+              icon: const Icon(Icons.keyboard_arrow_down),
+
+              // Array list of items
+              items: category.map((String category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+              // After selecting the desired option,it will
+              // change button value to selected value
+              onChanged: (String? newcateValue) {
+                setState(() {
+                  dropdownvaluecate = newcateValue!;
+                });
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget selectDate() {
+    return ElevatedButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const DateTimeEvent()));
+        },
+        child: Text("choose event date"));
+  }
+
+  Widget eventVenue() {
+    return TextFormField(
+      controller: eventVenueController,
+      minLines: 1,
+      maxLines: 10,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Color(0xFFfa8919)),
-          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
         ),
-        prefixIcon: Icon(
-          Icons.checkroom,
+        prefixIcon: const Icon(
+          Icons.place_outlined,
           color: Colors.black,
         ),
-        labelText: "Name of the dep",
-        hintText: "Types of Clothes stich",
-      ),
-    );
-  }
-
-  Widget SpecialistInTextField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFfa8919),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Color(0xFFfa8919)),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        prefixIcon: Icon(
-          Icons.favorite,
-          color: Colors.black,
-        ),
-        labelText: "SpecialistIn",
-        helperText: "SpecialistIn can't be empty",
-        hintText: "SpecialistIn",
+        hintText: "Event Venue",
       ),
     );
   }
@@ -376,15 +387,15 @@ class _createEventState extends State<createEvent> {
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(25),
-        color: Color(0xFFfa8919),
+        color: const Color(0xFFfa8919),
         child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
           },
-          child: Text(
+          child: const Text(
             "Add Event",
             textAlign: TextAlign.center,
             style: TextStyle(

@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+      loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
   }
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,28 +48,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 150,
                 child: Image.asset("assets/evento.png", fit: BoxFit.contain),
               ),
-              Text(
+              const Text(
                 "Welcome Back",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text("HI, ${loggedInUser.firstName}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
                   )),
               Text("${loggedInUser.email}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               ActionChip(
-                  label: Text("Logout"),
+                  label: const Text("Logout"),
                   onPressed: () {
                     logout(context);
                   }),
@@ -84,6 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()));
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }

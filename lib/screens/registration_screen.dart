@@ -21,12 +21,13 @@ class _registrationState extends State<registration> {
   bool isLoading = false;
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
-  final firstNameEditingController = new TextEditingController();
-  final lastNameEditingController = new TextEditingController();
-  final emailEditingController = new TextEditingController();
-  final passwordEditingController = new TextEditingController();
-  final confirmPasswordEditingController = new TextEditingController();
+  final firstNameEditingController = TextEditingController();
+  final lastNameEditingController = TextEditingController();
+  final emailEditingController = TextEditingController();
+  final passwordEditingController = TextEditingController();
+  final confirmPasswordEditingController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     //fields
     final firstNameField = TextFormField(
@@ -34,7 +35,7 @@ class _registrationState extends State<registration> {
       controller: firstNameEditingController,
       keyboardType: TextInputType.name,
       validator: (value) {
-        RegExp regex = new RegExp(r'^.{3,}$');
+        RegExp regex = RegExp(r'^.{3,}$');
         if (value!.isEmpty) {
           return ("First Name is required");
         }
@@ -48,8 +49,8 @@ class _registrationState extends State<registration> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.account_circle),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "First Name",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -66,8 +67,8 @@ class _registrationState extends State<registration> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.account_circle),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Last Name",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -92,8 +93,8 @@ class _registrationState extends State<registration> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.email),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.email),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Email",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -105,21 +106,22 @@ class _registrationState extends State<registration> {
       controller: passwordEditingController,
       obscureText: true,
       validator: (value) {
-        RegExp regex = new RegExp(r'^.{6,}$');
+        RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Password is required for login");
         }
         if (!regex.hasMatch(value)) {
           return ("Please Enter Valid Password min 6 character");
         }
+        return null;
       },
       onSaved: (value) {
         passwordEditingController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.lock),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -142,8 +144,8 @@ class _registrationState extends State<registration> {
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.lock),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Confirm Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -153,26 +155,26 @@ class _registrationState extends State<registration> {
     final signUpButton = Material(
         elevation: 5,
         borderRadius: BorderRadius.circular(30),
-        color: Color.fromARGB(255, 100, 176, 231),
+        color: const Color.fromARGB(255, 100, 176, 231),
         child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
             if (isLoading) return;
             setState(() => isLoading = true);
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(const Duration(seconds: 2));
             setState(() => isLoading = false);
             signUp(emailEditingController.text, passwordEditingController.text);
           },
           child: isLoading
-              ? SizedBox(
+              ? const SizedBox(
                   width: 200.0,
                   height: 200.0,
                   child: CircularProgressIndicator(
                     color: Colors.white,
                   ),
                 )
-              : Text(
+              : const Text(
                   "Sign Up",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -198,7 +200,7 @@ class _registrationState extends State<registration> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(right: 15),
+                        margin: const EdgeInsets.only(right: 15),
                         child: SizedBox(
                           width: 200.0,
                           child: Image.asset(
@@ -207,31 +209,32 @@ class _registrationState extends State<registration> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       firstNameField,
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       lastNameField,
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       emailField,
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       passwordField,
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       confirmPasswordField,
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       signUpButton,
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("Already have an account? "),
+                          const Text("Already have an account? "),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                                      builder: (context) =>
+                                          const LoginScreen()));
                             },
-                            child: Text(
+                            child: const Text(
                               "Sign In",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -304,7 +307,7 @@ class _registrationState extends State<registration> {
     Fluttertoast.showToast(msg: "Account Created Successfully");
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   }
 }

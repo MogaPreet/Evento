@@ -41,7 +41,9 @@ dependencies:
   firebase_core: ^1.14.0
   flutter_screenutil: ^5.5.3+1
   image_picker: 
+  syncfusion_flutter_datepicker:
 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

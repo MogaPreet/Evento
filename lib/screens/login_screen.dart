@@ -1,12 +1,9 @@
-import 'dart:math';
 
 import 'package:email_password_login/admin/event_form.dart';
-import 'package:email_password_login/screens/home.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,8 +15,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   //Firebasase
   final _auth = FirebaseAuth.instance;
@@ -46,8 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.mail),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.mail),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Email",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -57,13 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
       autofocus: false,
       controller: passwordController,
       validator: (value) {
-        RegExp regex = new RegExp(r'^.{6,}$');
+        RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Password is required for login");
         }
         if (!regex.hasMatch(value)) {
           return ("Please Enter Valid Password");
         }
+        return null;
       },
       onSaved: (value) {
         passwordController.text = value!;
@@ -71,8 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: true,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          prefixIcon: const Icon(Icons.lock),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -81,13 +79,13 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
         elevation: 5,
         borderRadius: BorderRadius.circular(30),
-        color: Color.fromARGB(255, 100, 176, 231),
+        color: const Color.fromARGB(255, 100, 176, 231),
         child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
             setState(() => isLoading = true);
-            await Future.delayed(Duration(seconds: 1));
+            await Future.delayed(const Duration(seconds: 1));
 
             setState(() {
               signIn(emailController.text, passwordController.text);
@@ -95,10 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
             });
           },
           child: isLoading
-              ? CircularProgressIndicator(
+              ? const CircularProgressIndicator(
                   color: Color.fromARGB(255, 242, 213, 213),
                 )
-              : Text(
+              : const Text(
                   "Login",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -124,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(right: 15),
+                        margin: const EdgeInsets.only(right: 15),
                         child: SizedBox(
                           width: 200.0,
                           child: Image.asset(
@@ -133,25 +131,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 35),
+                      const SizedBox(height: 35),
                       emailField,
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       passwordField,
-                      SizedBox(height: 35),
+                      const SizedBox(height: 35),
                       loginButton,
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("Don't have an account? "),
+                          const Text("Don't have an account? "),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => registration()));
+                                      builder: (context) => const registration()));
                             },
-                            child: Text(
+                            child: const Text(
                               "Sign up",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -178,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successfully"),
                 Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => createEvent())),
+                    MaterialPageRoute(builder: (context) => const createEvent())),
               })
           .catchError((error) {
         switch (error.code) {
