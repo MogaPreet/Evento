@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/event_Date.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _createEventState extends State<createEvent> {
   final ImagePicker _picker = ImagePicker();
 
   final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController eventFeesController = TextEditingController();
   final TextEditingController eventDescController = TextEditingController();
   final TextEditingController eventVenueController = TextEditingController();
 
@@ -59,7 +61,7 @@ class _createEventState extends State<createEvent> {
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFfa8919),
+                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -249,6 +251,7 @@ class _createEventState extends State<createEvent> {
             child: DropdownButton(
               // Initial Value
               value: dropdownvalue,
+
               style: const TextStyle(color: Colors.white),
               underline: Container(),
               borderRadius: BorderRadius.circular(5),
@@ -267,11 +270,13 @@ class _createEventState extends State<createEvent> {
               }).toList(),
               // After selecting the desired option,it will
               // change button value to selected value
+
               onChanged: (String? newValue) {
                 setState(() {
                   dropdownvalue = newValue!;
                 });
               },
+              hint: const Text("Select College"),
             ),
           ),
         ),
@@ -281,7 +286,7 @@ class _createEventState extends State<createEvent> {
 
   Widget eventFees() {
     return TextFormField(
-      controller: eventNameController,
+      controller: eventFeesController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           border: const OutlineInputBorder(
@@ -387,19 +392,19 @@ class _createEventState extends State<createEvent> {
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(25),
-        color: const Color(0xFFfa8919),
+        color: Colors.black,
         child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+                MaterialPageRoute(builder: (context) => const Dummy()));
           },
           child: const Text(
             "Add Event",
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
       ),
