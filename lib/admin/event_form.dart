@@ -16,9 +16,10 @@ class createEvent extends StatefulWidget {
 }
 
 class _createEventState extends State<createEvent> {
-  String level = "Compitition";
   PickedFile? _imagefile;
   final ImagePicker _picker = ImagePicker();
+
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController eventNameController = TextEditingController();
   final TextEditingController eventFeesController = TextEditingController();
@@ -45,6 +46,70 @@ class _createEventState extends State<createEvent> {
 
   @override
   Widget build(BuildContext context) {
+    //all the fields
+    final eventName = TextFormField(
+      controller: eventNameController,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Event Name is Required";
+        } else {
+          return null;
+        }
+      },
+      onSaved: (value) {
+        eventNameController.text = value!;
+      },
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        prefixIcon: const Icon(
+          Icons.event_available_outlined,
+          color: Colors.black,
+        ),
+        hintText: "Event Name",
+      ),
+    );
+
+    final eventDesc = TextFormField(
+      controller: eventDescController,
+      minLines: 1,
+      maxLines: 10,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Event Details is Required";
+        } else {
+          return null;
+        }
+      },
+      onSaved: (value) {
+        eventNameController.text = value!;
+      },
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        prefixIcon: const Icon(
+          Icons.description_outlined,
+          color: Colors.black,
+        ),
+        hintText: "Event Description",
+      ),
+    );
+
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -54,63 +119,66 @@ class _createEventState extends State<createEvent> {
               overscroll.disallowIndicator();
               return true;
             }),
-            child: ListView(
-              children: <Widget>[
-                const SizedBox(
-                  height: 15,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const <Widget>[
-                    Text(
-                      "Add Event",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const <Widget>[
+                      Text(
+                        "Add Event",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                EventImage(),
-                const SizedBox(
-                  height: 25,
-                ),
-                eventName(),
-                const SizedBox(
-                  height: 15,
-                ),
-                eventDesc(),
-                const SizedBox(
-                  height: 15,
-                ),
-                collegeSelect(),
-                const SizedBox(
-                  height: 15,
-                ),
-                selectCategory(),
-                const SizedBox(
-                  height: 15,
-                ),
-                DateTimeEvent(),
-                SizedBox(
-                  height: 15,
-                ),
-                eventFees(),
-                const SizedBox(
-                  height: 15,
-                ),
-                eventVenue(),
-                const SizedBox(
-                  height: 20,
-                ),
-                CreateEventButton(),
-              ],
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  EventImage(),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  eventName,
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  eventDesc,
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  collegeSelect(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  selectCategory(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  DateTimeEvent(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  eventFees(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  eventVenue(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CreateEventButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -194,53 +262,6 @@ class _createEventState extends State<createEvent> {
     setState(() {
       _imagefile = pickedFile!;
     });
-  }
-
-  Widget eventName() {
-    return TextFormField(
-      controller: eventNameController,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Colors.black),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        prefixIcon: const Icon(
-          Icons.event_available_outlined,
-          color: Colors.black,
-        ),
-        hintText: "Event Name",
-      ),
-    );
-  }
-
-  Widget eventDesc() {
-    return TextFormField(
-      controller: eventDescController,
-      minLines: 1,
-      maxLines: 10,
-      keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 2, color: Colors.black),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        prefixIcon: const Icon(
-          Icons.description_outlined,
-          color: Colors.black,
-        ),
-        hintText: "Event Description",
-      ),
-    );
   }
 
   Widget collegeSelect() {
