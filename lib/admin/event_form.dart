@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:email_password_login/admin/dummy.dart';
-import 'package:email_password_login/admin/event_Date.dart';
+
 import 'package:email_password_login/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
 
 class createEvent extends StatefulWidget {
   const createEvent({Key? key}) : super(key: key);
@@ -46,63 +49,69 @@ class _createEventState extends State<createEvent> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          child: ListView(
-            children: <Widget>[
-              const SizedBox(
-                height: 15,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
-                  Text(
-                    "Add Event",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: ((overscroll) {
+              overscroll.disallowIndicator();
+              return true;
+            }),
+            child: ListView(
+              children: <Widget>[
+                const SizedBox(
+                  height: 15,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const <Widget>[
+                    Text(
+                      "Add Event",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              EventImage(),
-              const SizedBox(
-                height: 25,
-              ),
-              eventName(),
-              const SizedBox(
-                height: 15,
-              ),
-              eventDesc(),
-              const SizedBox(
-                height: 15,
-              ),
-              collegeSelect(),
-              const SizedBox(
-                height: 15,
-              ),
-              selectCategory(),
-              const SizedBox(
-                height: 15,
-              ),
-              selectDate(),
-              SizedBox(
-                height: 15,
-              ),
-              eventFees(),
-              const SizedBox(
-                height: 15,
-              ),
-              eventVenue(),
-              const SizedBox(
-                height: 20,
-              ),
-              CreateProfileButton(),
-            ],
+                  ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                EventImage(),
+                const SizedBox(
+                  height: 25,
+                ),
+                eventName(),
+                const SizedBox(
+                  height: 15,
+                ),
+                eventDesc(),
+                const SizedBox(
+                  height: 15,
+                ),
+                collegeSelect(),
+                const SizedBox(
+                  height: 15,
+                ),
+                selectCategory(),
+                const SizedBox(
+                  height: 15,
+                ),
+                DateTimeEvent(),
+                SizedBox(
+                  height: 15,
+                ),
+                eventFees(),
+                const SizedBox(
+                  height: 15,
+                ),
+                eventVenue(),
+                const SizedBox(
+                  height: 20,
+                ),
+                CreateEventButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -113,26 +122,24 @@ class _createEventState extends State<createEvent> {
     return Center(
       child: Stack(
         children: <Widget>[
-          CircleAvatar(
-            radius: 70.0,
-            backgroundImage:
-                _imagefile == null ? null : FileImage(File(_imagefile!.path)),
-          ),
-          Positioned(
-            bottom: 20.0,
-            right: 20.0,
-            child: InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: ((builder) => bottomSheet()),
-                );
-              },
-              child: const Icon(
-                Icons.add_a_photo_rounded,
-                color: Colors.black,
-                size: 28,
-              ),
+          InkWell(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: ((builder) => bottomSheet()),
+              );
+            },
+            child: Container(
+              width: double.infinity,
+              height: 150.0,
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.black)),
+              child: _imagefile != null
+                  ? Image.file(
+                      File(_imagefile!.path),
+                      fit: BoxFit.cover,
+                    )
+                  : Icon(Icons.add_a_photo_outlined),
             ),
           ),
         ],
@@ -352,15 +359,6 @@ class _createEventState extends State<createEvent> {
     );
   }
 
-  Widget selectDate() {
-    return ElevatedButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const DateTimeEvent()));
-        },
-        child: Text("choose event date"));
-  }
-
   Widget eventVenue() {
     return TextFormField(
       controller: eventVenueController,
@@ -386,7 +384,7 @@ class _createEventState extends State<createEvent> {
     );
   }
 
-  Widget CreateProfileButton() {
+  Widget CreateEventButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Material(
@@ -407,6 +405,66 @@ class _createEventState extends State<createEvent> {
                 fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class DateTimeEvent extends StatefulWidget {
+  const DateTimeEvent({Key? key}) : super(key: key);
+
+  @override
+  State<DateTimeEvent> createState() => _DateTimeEventState();
+}
+
+class _DateTimeEventState extends State<DateTimeEvent> {
+  String _selectedDate = '';
+
+  String _dateCount = "";
+  String _range = '';
+  String _rangeCount = '';
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} '
+            '- ${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
+        if (args.value.startDate == args.value.endDate) {
+          _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} ';
+        }
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        int _dateCount = args.value.toString().length;
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Choose Event Date"),
+          ),
+          SfDateRangePicker(
+            onSelectionChanged: _onSelectionChanged,
+            selectionMode: DateRangePickerSelectionMode.range,
+            enablePastDates: false,
+            initialSelectedRange: PickerDateRange(
+                DateTime.now().subtract(const Duration(days: 4)),
+                DateTime.now().add(const Duration(days: 3))),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text('$_range'),
+          ),
+        ],
       ),
     );
   }
