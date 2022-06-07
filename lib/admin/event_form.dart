@@ -21,6 +21,8 @@ class _createEventState extends State<createEvent> {
 
   final _formKey = GlobalKey<FormState>();
 
+  bool _isLoading = false;
+
   final TextEditingController eventNameController = TextEditingController();
   final TextEditingController eventFeesController = TextEditingController();
   final TextEditingController eventDescController = TextEditingController();
@@ -109,6 +111,88 @@ class _createEventState extends State<createEvent> {
         hintText: "Event Description",
       ),
     );
+
+    Widget collegeSelect() {
+      return Column(
+        children: [
+          const Text("Choose College"),
+          const SizedBox(
+            height: 10,
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+                color: Colors.black, borderRadius: BorderRadius.circular(50)),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: DropdownButton(
+                // Initial Value
+                value: dropdownvalue,
+
+                style: const TextStyle(color: Colors.white),
+                underline: Container(),
+                borderRadius: BorderRadius.circular(5),
+                isExpanded: true,
+                dropdownColor: Colors.black,
+                // Down Arrow Icon
+
+                icon: const Icon(Icons.keyboard_arrow_down),
+
+                // Array list of items
+                items: college.map((String college) {
+                  return DropdownMenuItem(
+                    value: college,
+                    child: Text(college),
+                  );
+                }).toList(),
+                // After selecting the desired option,it will
+                // change button value to selected value
+
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownvalue = newValue!;
+                  });
+                },
+                hint: const Text("Select College"),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    void _addEvent() async {
+      final isValid = _formKey.currentState!.validate();
+      var date = DateTime.now().toString();
+      var dateparse = DateTime.parse(date);
+      var formattedDate =
+          "${dateparse.day}-${dateparse.month}-${dateparse.year}";
+    }
+
+    Widget CreateEventButton() {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.black,
+          child: MaterialButton(
+            padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+            minWidth: MediaQuery.of(context).size.width,
+            onPressed: () {
+              _addEvent();
+            },
+            child: const Text(
+              "Add Event",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -262,54 +346,7 @@ class _createEventState extends State<createEvent> {
     setState(() {
       _imagefile = pickedFile!;
     });
-  }
-
-  Widget collegeSelect() {
-    return Column(
-      children: [
-        const Text("Choose College"),
-        const SizedBox(
-          height: 10,
-        ),
-        DecoratedBox(
-          decoration: BoxDecoration(
-              color: Colors.black, borderRadius: BorderRadius.circular(50)),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: DropdownButton(
-              // Initial Value
-              value: dropdownvalue,
-
-              style: const TextStyle(color: Colors.white),
-              underline: Container(),
-              borderRadius: BorderRadius.circular(5),
-              isExpanded: true,
-              dropdownColor: Colors.black,
-              // Down Arrow Icon
-
-              icon: const Icon(Icons.keyboard_arrow_down),
-
-              // Array list of items
-              items: college.map((String college) {
-                return DropdownMenuItem(
-                  value: college,
-                  child: Text(college),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownvalue = newValue!;
-                });
-              },
-              hint: const Text("Select College"),
-            ),
-          ),
-        ),
-      ],
-    );
+    Navigator.pop(context);
   }
 
   Widget eventFees() {
@@ -401,31 +438,6 @@ class _createEventState extends State<createEvent> {
           color: Colors.black,
         ),
         hintText: "Event Venue",
-      ),
-    );
-  }
-
-  Widget CreateEventButton() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: Material(
-        elevation: 4,
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.black,
-        child: MaterialButton(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Dummy()));
-          },
-          child: const Text(
-            "Add Event",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
       ),
     );
   }
