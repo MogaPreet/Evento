@@ -1,7 +1,12 @@
-import 'dart:io';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:io' as io;
 import 'package:email_password_login/admin/dummy.dart';
-
-import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/models/event_models.dart';
+import 'package:file/file.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +21,45 @@ class createEvent extends StatefulWidget {
 }
 
 class _createEventState extends State<createEvent> {
-  PickedFile? _imagefile;
-  final ImagePicker _picker = ImagePicker();
+  String _selectedDate = '';
+
+  String _dateCount = "";
+  String _range = '';
+  String _rangeCount = '';
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} '
+            '- ${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
+        if (args.value.startDate == args.value.endDate) {
+          _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} ';
+        }
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        int _dateCount = args.value.toString().length;
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
+    });
+  }
+
+  XFile? _pickedImage;
 
   final _formKey = GlobalKey<FormState>();
 
+  var _eventCategory = "";
+
   bool _isLoading = false;
+  String? url;
 
-  final TextEditingController eventNameController = TextEditingController();
-  final TextEditingController eventFeesController = TextEditingController();
-  final TextEditingController eventDescController = TextEditingController();
-  final TextEditingController eventVenueController = TextEditingController();
+  final eventNameController = TextEditingController();
+  final eventFeesController = TextEditingController();
+  final eventDescController = TextEditingController();
+  final eventVenueController = TextEditingController();
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String dropdownvalue = 'SBMP';
   var college = [
     'SBMP',
@@ -79,6 +111,50 @@ class _createEventState extends State<createEvent> {
       ),
     );
 
+    final eventFees = TextFormField(
+      controller: eventFeesController,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 2, color: Colors.black),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          prefixIcon: const Icon(
+            Icons.currency_rupee_outlined,
+            color: Colors.green,
+          ),
+          hintText: "Event Fees",
+          labelText: 'if any'),
+    );
+
+    final eventVenue = TextFormField(
+      controller: eventVenueController,
+      minLines: 1,
+      maxLines: 10,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: 2, color: Colors.black),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        prefixIcon: const Icon(
+          Icons.place_outlined,
+          color: Colors.black,
+        ),
+        hintText: "Event Venue",
+      ),
+    );
+
     final eventDesc = TextFormField(
       controller: eventDescController,
       minLines: 1,
@@ -91,7 +167,7 @@ class _createEventState extends State<createEvent> {
         }
       },
       onSaved: (value) {
-        eventNameController.text = value!;
+        eventDescController.text = value!;
       },
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
@@ -164,8 +240,77 @@ class _createEventState extends State<createEvent> {
       final isValid = _formKey.currentState!.validate();
       var date = DateTime.now().toString();
       var dateparse = DateTime.parse(date);
-      var formattedDate =
-          "${dateparse.day}-${dateparse.month}-${dateparse.year}";
+
+      if (isValid) {
+        _formKey.currentState!.save();
+        try {
+          if (_pickedImage == null) {
+            print('Please Select an image to continue');
+          } else {
+            setState(() {
+              _isLoading == true;
+            });
+            final ref = FirebaseStorage.instance
+                .ref()
+                .child('EventImages')
+                .child('events.jpeg');
+
+            await ref.putFile(io.File(_pickedImage!.path));
+            url = await ref.getDownloadURL();
+            final User? user = _auth.currentUser;
+            EventModel eventModel = EventModel();
+            eventModel.eid = user?.uid;
+            eventModel.url = url;
+            eventModel.eventName = eventNameController.text;
+            eventModel.eventDescription = eventDescController.text;
+            eventModel.eventCollege = dropdownvalue;
+            eventModel.eventCategory = dropdownvaluecate;
+            eventModel.eventDate = _range;
+            eventModel.eventFees = eventFeesController.text;
+            eventModel.eventLocation = eventVenueController.text;
+            await FirebaseFirestore.instance
+                .collection('events')
+                .doc(user?.uid)
+                .set(eventModel.toMap());
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Dummy()),
+                (route) => false);
+          }
+        } catch (error) {
+          print('error occured ${error}');
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
+
+    Widget DateTimeEvent() {
+      return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Choose Event Date"),
+            ),
+            SfDateRangePicker(
+              onSelectionChanged: _onSelectionChanged,
+              selectionMode: DateRangePickerSelectionMode.range,
+              enablePastDates: false,
+              initialSelectedRange: PickerDateRange(
+                  DateTime.now().subtract(const Duration(days: 4)),
+                  DateTime.now().add(const Duration(days: 3))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('$_range'),
+            ),
+          ],
+        ),
+      );
     }
 
     Widget CreateEventButton() {
@@ -252,11 +397,11 @@ class _createEventState extends State<createEvent> {
                   SizedBox(
                     height: 15,
                   ),
-                  eventFees(),
+                  eventFees,
                   const SizedBox(
                     height: 15,
                   ),
-                  eventVenue(),
+                  eventVenue,
                   const SizedBox(
                     height: 20,
                   ),
@@ -268,6 +413,10 @@ class _createEventState extends State<createEvent> {
         ),
       ),
     );
+  }
+
+  Future<XFile?> imagePicker() async {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
   }
 
   Widget EventImage() {
@@ -286,9 +435,9 @@ class _createEventState extends State<createEvent> {
               height: 150.0,
               decoration:
                   BoxDecoration(border: Border.all(color: Colors.black)),
-              child: _imagefile != null
+              child: _pickedImage != null && _pickedImage!.path.isNotEmpty
                   ? Image.file(
-                      File(_imagefile!.path),
+                      io.File(_pickedImage!.path),
                       fit: BoxFit.cover,
                     )
                   : Icon(Icons.add_a_photo_outlined),
@@ -320,55 +469,23 @@ class _createEventState extends State<createEvent> {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
             FlatButton.icon(
-              icon: const Icon(Icons.camera),
-              onPressed: () {
-                takePhoto(ImageSource.camera);
+              icon: const Icon(Icons.image),
+              onPressed: () async {
+                _pickedImage = await imagePicker();
+                if (_pickedImage != null && _pickedImage!.path.isNotEmpty) {
+                  setState(() {});
+                }
               },
-              label: const Text("Camera"),
+              label: const Text("Gallery"),
             ),
             FlatButton.icon(
-              icon: const Icon(Icons.image),
-              onPressed: () {
-                takePhoto(ImageSource.gallery);
-              },
+              icon: const Icon(Icons.camera),
+              onPressed: () {},
               label: const Text("Gallery"),
             ),
           ])
         ],
       ),
-    );
-  }
-
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(
-      source: source,
-    );
-    setState(() {
-      _imagefile = pickedFile!;
-    });
-    Navigator.pop(context);
-  }
-
-  Widget eventFees() {
-    return TextFormField(
-      controller: eventFeesController,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.black,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2, color: Colors.black),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          prefixIcon: const Icon(
-            Icons.currency_rupee_outlined,
-            color: Colors.green,
-          ),
-          hintText: "Event Fees",
-          labelText: 'if any'),
     );
   }
 
@@ -438,66 +555,6 @@ class _createEventState extends State<createEvent> {
           color: Colors.black,
         ),
         hintText: "Event Venue",
-      ),
-    );
-  }
-}
-
-class DateTimeEvent extends StatefulWidget {
-  const DateTimeEvent({Key? key}) : super(key: key);
-
-  @override
-  State<DateTimeEvent> createState() => _DateTimeEventState();
-}
-
-class _DateTimeEventState extends State<DateTimeEvent> {
-  String _selectedDate = '';
-
-  String _dateCount = "";
-  String _range = '';
-  String _rangeCount = '';
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    setState(() {
-      if (args.value is PickerDateRange) {
-        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} '
-            '- ${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
-        if (args.value.startDate == args.value.endDate) {
-          _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} ';
-        }
-      } else if (args.value is DateTime) {
-        _selectedDate = args.value.toString();
-      } else if (args.value is List<DateTime>) {
-        int _dateCount = args.value.toString().length;
-      } else {
-        _rangeCount = args.value.length.toString();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Choose Event Date"),
-          ),
-          SfDateRangePicker(
-            onSelectionChanged: _onSelectionChanged,
-            selectionMode: DateRangePickerSelectionMode.range,
-            enablePastDates: false,
-            initialSelectedRange: PickerDateRange(
-                DateTime.now().subtract(const Duration(days: 4)),
-                DateTime.now().add(const Duration(days: 3))),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text('$_range'),
-          ),
-        ],
       ),
     );
   }
