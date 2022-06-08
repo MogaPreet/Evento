@@ -1,5 +1,5 @@
 class EventModel {
-  String? eid;
+  String? uid;
   String? url;
   String? eventName;
   String? eventDescription;
@@ -10,7 +10,7 @@ class EventModel {
   String? eventLocation;
 
   EventModel(
-      {this.eid,
+      {this.uid,
       this.url,
       this.eventName,
       this.eventDescription,
@@ -22,7 +22,7 @@ class EventModel {
 
   factory EventModel.fromMap(map) {
     return EventModel(
-      eid: map['uid'],
+      uid: map['uid'],
       url: map['url'],
       eventName: map['eventName'],
       eventDescription: map['eventDescription'],
@@ -35,7 +35,7 @@ class EventModel {
   }
   Map<String, dynamic> toMap() {
     return {
-      'eid': eid,
+      'uid': uid,
       'url': url,
       'eventName': eventName,
       'eventDescription': eventDescription,

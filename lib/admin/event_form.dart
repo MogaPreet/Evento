@@ -253,13 +253,13 @@ class _createEventState extends State<createEvent> {
             final ref = FirebaseStorage.instance
                 .ref()
                 .child('EventImages')
-                .child('events.jpeg');
+                .child(eventNameController.text + '.jpeg');
 
             await ref.putFile(io.File(_pickedImage!.path));
             url = await ref.getDownloadURL();
-            final User? user = _auth.currentUser;
+
             EventModel eventModel = EventModel();
-            eventModel.eid = user?.uid;
+
             eventModel.url = url;
             eventModel.eventName = eventNameController.text;
             eventModel.eventDescription = eventDescController.text;
@@ -270,7 +270,7 @@ class _createEventState extends State<createEvent> {
             eventModel.eventLocation = eventVenueController.text;
             await FirebaseFirestore.instance
                 .collection('events')
-                .doc(user?.uid)
+                .doc(eventNameController.text)
                 .set(eventModel.toMap());
             Navigator.pushAndRemoveUntil(
                 context,
@@ -326,14 +326,21 @@ class _createEventState extends State<createEvent> {
             onPressed: () {
               _addEvent();
             },
-            child: const Text(
-              "Add Event",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
+            child: _isLoading
+                ? Center(
+                    child: Container(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(),
+                  ))
+                : Text(
+                    "Add Event",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
           ),
         ),
       );
