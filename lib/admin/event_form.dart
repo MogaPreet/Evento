@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -61,6 +62,7 @@ class _createEventState extends State<createEvent> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String dropdownvalue = 'SBMP';
+
   var college = [
     'SBMP',
     'Mithibai',
@@ -113,6 +115,13 @@ class _createEventState extends State<createEvent> {
 
     final eventFees = TextFormField(
       controller: eventFeesController,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "if it is free enter 0";
+        } else {
+          return null;
+        }
+      },
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           border: const OutlineInputBorder(
@@ -134,9 +143,16 @@ class _createEventState extends State<createEvent> {
 
     final eventVenue = TextFormField(
       controller: eventVenueController,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Event Location is Required";
+        } else {
+          return null;
+        }
+      },
       minLines: 1,
       maxLines: 10,
-      keyboardType: TextInputType.multiline,
+      keyboardType: TextInputType.streetAddress,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
           borderSide: BorderSide(
@@ -197,21 +213,24 @@ class _createEventState extends State<createEvent> {
           ),
           DecoratedBox(
             decoration: BoxDecoration(
-                color: Colors.black, borderRadius: BorderRadius.circular(50)),
+                color: Colors.black, borderRadius: BorderRadius.circular(8)),
             child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               child: DropdownButton(
                 // Initial Value
                 value: dropdownvalue,
-
+                disabledHint: Text("Choose Collge"),
                 style: const TextStyle(color: Colors.white),
                 underline: Container(),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(2),
                 isExpanded: true,
                 dropdownColor: Colors.black,
                 // Down Arrow Icon
 
-                icon: const Icon(Icons.keyboard_arrow_down),
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                ),
 
                 // Array list of items
                 items: college.map((String college) {
@@ -245,10 +264,10 @@ class _createEventState extends State<createEvent> {
         _formKey.currentState!.save();
         try {
           if (_pickedImage == null) {
-            print('Please Select an image to continue');
+            Fluttertoast.showToast(msg: 'Please Select an image to contiue');
           } else {
             setState(() {
-              _isLoading == true;
+              _isLoading = true;
             });
             final ref = FirebaseStorage.instance
                 .ref()
@@ -272,6 +291,7 @@ class _createEventState extends State<createEvent> {
                 .collection('events')
                 .doc(eventNameController.text)
                 .set(eventModel.toMap());
+
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const Dummy()),
@@ -318,7 +338,7 @@ class _createEventState extends State<createEvent> {
         padding: const EdgeInsets.only(bottom: 10.0),
         child: Material(
           elevation: 4,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(8),
           color: Colors.black,
           child: MaterialButton(
             padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -327,12 +347,14 @@ class _createEventState extends State<createEvent> {
               _addEvent();
             },
             child: _isLoading
-                ? Center(
-                    child: Container(
-                    height: 40,
-                    width: 40,
-                    child: CircularProgressIndicator(),
-                  ))
+                ? SizedBox(
+                    width: 20.0,
+                    height: 20.0,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
                 : Text(
                     "Add Event",
                     textAlign: TextAlign.center,
@@ -431,11 +453,11 @@ class _createEventState extends State<createEvent> {
       child: Stack(
         children: <Widget>[
           InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: ((builder) => bottomSheet()),
-              );
+            onTap: () async {
+              _pickedImage = await imagePicker();
+              if (_pickedImage != null && _pickedImage!.path.isNotEmpty) {
+                setState(() {});
+              }
             },
             child: Container(
               width: double.infinity,
@@ -485,11 +507,6 @@ class _createEventState extends State<createEvent> {
               },
               label: const Text("Gallery"),
             ),
-            FlatButton.icon(
-              icon: const Icon(Icons.camera),
-              onPressed: () {},
-              label: const Text("Gallery"),
-            ),
           ])
         ],
       ),
@@ -505,20 +522,23 @@ class _createEventState extends State<createEvent> {
         ),
         DecoratedBox(
           decoration: BoxDecoration(
-              color: Colors.black, borderRadius: BorderRadius.circular(50)),
+              color: Colors.black, borderRadius: BorderRadius.circular(8)),
           child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
+            padding: const EdgeInsets.only(left: 15, right: 15),
             child: DropdownButton(
               // Initial Value
               value: dropdownvaluecate,
               style: const TextStyle(color: Colors.white),
               underline: Container(),
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(2),
               isExpanded: true,
               dropdownColor: Colors.black,
               // Down Arrow Icon
 
-              icon: const Icon(Icons.keyboard_arrow_down),
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.white,
+              ),
 
               // Array list of items
               items: category.map((String category) {

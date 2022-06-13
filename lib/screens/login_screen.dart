@@ -1,4 +1,3 @@
-
 import 'package:email_password_login/admin/event_form.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //Firebasase
   final _auth = FirebaseAuth.instance;
-  bool isLoading = false;
+  bool _isLoading = false;
   String? errorMessage;
 
   @override
@@ -79,22 +78,20 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
         elevation: 5,
         borderRadius: BorderRadius.circular(30),
-        color: const Color.fromARGB(255, 100, 176, 231),
+        color: Color.fromARGB(255, 0, 0, 0),
         child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
-            setState(() => isLoading = true);
-            await Future.delayed(const Duration(seconds: 1));
-
-            setState(() {
-              signIn(emailController.text, passwordController.text);
-              isLoading = false;
-            });
+            signIn(emailController.text, passwordController.text);
           },
-          child: isLoading
-              ? const CircularProgressIndicator(
-                  color: Color.fromARGB(255, 242, 213, 213),
+          child: _isLoading
+              ? SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: const CircularProgressIndicator(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
                 )
               : const Text(
                   "Login",
@@ -147,7 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const registration()));
+                                      builder: (context) =>
+                                          const registration()));
                             },
                             child: const Text(
                               "Sign up",
@@ -171,12 +169,15 @@ class _LoginScreenState extends State<LoginScreen> {
   //Login Function
   void signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successfully"),
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const createEvent())),
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const createEvent())),
               })
           .catchError((error) {
         switch (error.code) {
@@ -202,6 +203,9 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
+        setState(() {
+          _isLoading = false;
+        });
         Fluttertoast.showToast(msg: errorMessage!);
         print(error.code);
       });

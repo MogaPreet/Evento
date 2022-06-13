@@ -18,7 +18,7 @@ class registration extends StatefulWidget {
 class _registrationState extends State<registration> {
   @override
   final _auth = FirebaseAuth.instance;
-  bool isLoading = false;
+  bool _isLoading = false;
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
   final firstNameEditingController = TextEditingController();
@@ -155,21 +155,17 @@ class _registrationState extends State<registration> {
     final signUpButton = Material(
         elevation: 5,
         borderRadius: BorderRadius.circular(30),
-        color: const Color.fromARGB(255, 100, 176, 231),
+        color: Color.fromARGB(255, 0, 0, 0),
         child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
-            if (isLoading) return;
-            setState(() => isLoading = true);
-            await Future.delayed(const Duration(seconds: 2));
-            setState(() => isLoading = false);
             signUp(emailEditingController.text, passwordEditingController.text);
           },
-          child: isLoading
+          child: _isLoading
               ? const SizedBox(
-                  width: 200.0,
-                  height: 200.0,
+                  width: 20.0,
+                  height: 20.0,
                   child: CircularProgressIndicator(
                     color: Colors.white,
                   ),
@@ -192,7 +188,7 @@ class _registrationState extends State<registration> {
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.all(36.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: Form(
                   key: _formKey,
                   child: Column(
@@ -255,6 +251,9 @@ class _registrationState extends State<registration> {
 
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postDetailsToFirestore()})
@@ -285,6 +284,7 @@ class _registrationState extends State<registration> {
             errorMessage = "An undefined Error happened.";
         }
         Fluttertoast.showToast(msg: errorMessage!);
+        _isLoading = false;
         print(error.code);
       });
     }
