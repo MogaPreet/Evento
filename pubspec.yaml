@@ -44,13 +44,16 @@ dependencies:
   file_picker:
   syncfusion_flutter_datepicker:
   firebase_storage: ^10.2.17
+  flutter_native_splash: ^2.0.1+1
+
+
   uuid:
-  
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_native_splash: ^2.0.1+1
+  
 
 flutter_native_splash: 
   image: assets/splash.png

@@ -11,21 +11,38 @@ class detailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+        body: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: ((overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          }),
           child: ListView(
             children: [
               Container(
                 transform: Matrix4.translationValues(0, -20, 0),
                 child: Stack(
                   children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 2,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(documentSnapshot["url"]),
-                      )),
+                    ShaderMask(
+                      shaderCallback: (rectangle) {
+                        return LinearGradient(
+                                colors: [
+                              Colors.black,
+                              Colors.transparent,
+                            ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter)
+                            .createShader(Rect.fromLTRB(
+                                0, 0, rectangle.width, rectangle.height));
+                      },
+                      blendMode: BlendMode.darken,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 2,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(documentSnapshot["url"]),
+                        )),
+                      ),
                     ),
                     Positioned(
                       right: 10,
@@ -46,9 +63,9 @@ class detailPage extends StatelessWidget {
                           ),
                           CircleAvatar(
                             radius: 32,
-                            backgroundColor: Colors.red,
+                            backgroundColor: Colors.black,
                             child: Text(
-                              documentSnapshot["eventDate"],
+                              documentSnapshot["eventCollege"],
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -76,7 +93,13 @@ class detailPage extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.event_available_outlined),
+                              Icon(
+                                Icons.category_rounded,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 7,
+                              ),
                               Text(
                                 documentSnapshot["eventCategory"],
                                 style: TextStyle(color: Colors.white),
