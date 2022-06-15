@@ -1,5 +1,6 @@
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/screens/homescreen.dart';
 import 'package:email_password_login/screens/login_screen.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: const Dummy(),
     );
   }
 }

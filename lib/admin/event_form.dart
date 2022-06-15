@@ -1,4 +1,3 @@
-// ignore: avoid_web_libraries_in_flutter
 import 'dart:io' as io;
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/models/event_models.dart';
@@ -13,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class createEvent extends StatefulWidget {
   const createEvent({Key? key}) : super(key: key);
@@ -33,6 +33,7 @@ class _createEventState extends State<createEvent> {
       if (args.value is PickerDateRange) {
         _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} '
             '- ${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
+
         if (args.value.startDate == args.value.endDate) {
           _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} ';
         }
@@ -54,6 +55,7 @@ class _createEventState extends State<createEvent> {
 
   bool _isLoading = false;
   String? url;
+  var uuid = Uuid();
 
   final eventNameController = TextEditingController();
   final eventFeesController = TextEditingController();
@@ -258,6 +260,7 @@ class _createEventState extends State<createEvent> {
     void _addEvent() async {
       final isValid = _formKey.currentState!.validate();
       var date = DateTime.now().toString();
+
       var dateparse = DateTime.parse(date);
 
       if (isValid) {
@@ -276,9 +279,10 @@ class _createEventState extends State<createEvent> {
 
             await ref.putFile(io.File(_pickedImage!.path));
             url = await ref.getDownloadURL();
+            final id = uuid.v4();
 
             EventModel eventModel = EventModel();
-
+            eventModel.id = id;
             eventModel.url = url;
             eventModel.eventName = eventNameController.text;
             eventModel.eventDescription = eventDescController.text;
@@ -287,9 +291,10 @@ class _createEventState extends State<createEvent> {
             eventModel.eventDate = _range;
             eventModel.eventFees = eventFeesController.text;
             eventModel.eventLocation = eventVenueController.text;
+            eventModel.eventCreatedAt = Timestamp.now().toDate().toString();
             await FirebaseFirestore.instance
                 .collection('events')
-                .doc(eventNameController.text)
+                .doc(id)
                 .set(eventModel.toMap());
 
             Navigator.pushAndRemoveUntil(

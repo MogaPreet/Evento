@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EventModel {
-  String? uid;
+  String? id;
   String? url;
   String? eventName;
   String? eventDescription;
@@ -8,9 +10,10 @@ class EventModel {
   String? eventDate;
   String? eventFees;
   String? eventLocation;
+  String? eventCreatedAt;
 
   EventModel(
-      {this.uid,
+      {this.id,
       this.url,
       this.eventName,
       this.eventDescription,
@@ -18,24 +21,25 @@ class EventModel {
       this.eventCategory,
       this.eventDate,
       this.eventFees,
-      this.eventLocation});
+      this.eventLocation,
+      this.eventCreatedAt});
 
   factory EventModel.fromMap(map) {
     return EventModel(
-      uid: map['uid'],
-      url: map['url'],
-      eventName: map['eventName'],
-      eventDescription: map['eventDescription'],
-      eventCollege: map['eventCollege'],
-      eventCategory: map['eventCategory'],
-      eventDate: map['eventDate'],
-      eventFees: map['eventFees'],
-      eventLocation: map['eventLocation'],
-    );
+        id: map['id'],
+        url: map['url'],
+        eventName: map['eventName'],
+        eventDescription: map['eventDescription'],
+        eventCollege: map['eventCollege'],
+        eventCategory: map['eventCategory'],
+        eventDate: map['eventDate'],
+        eventFees: map['eventFees'],
+        eventLocation: map['eventLocation'],
+        eventCreatedAt: map['eventCreatedAt']);
   }
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
+      'id': id,
       'url': url,
       'eventName': eventName,
       'eventDescription': eventDescription,
@@ -44,6 +48,7 @@ class EventModel {
       'eventDate': eventDate,
       'eventFees': eventFees,
       'eventLocation': eventLocation,
+      'eventCreatedAt': eventCreatedAt
     };
   }
 }
