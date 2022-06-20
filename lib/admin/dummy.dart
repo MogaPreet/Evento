@@ -4,9 +4,11 @@ import 'package:email_password_login/admin/event_form.dart';
 import 'package:email_password_login/admin/users.dart';
 
 import 'package:email_password_login/models/event_models.dart';
+import 'package:email_password_login/widgets/eventContainer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class Dummy extends StatefulWidget {
   const Dummy({Key? key}) : super(key: key);
@@ -39,6 +41,12 @@ class _DummyState extends State<Dummy> {
                   .push(MaterialPageRoute(builder: (context) => Users()));
             },
           ),
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => eventContainer()));
+              },
+              icon: Icon(Icons.view_agenda_rounded))
         ],
         elevation: 0.0,
         centerTitle: true,

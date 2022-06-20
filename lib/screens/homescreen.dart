@@ -1,73 +1,181 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_password_login/models/event_models.dart';
-import 'package:flutter/material.dart';
+import 'package:email_password_login/admin/dummy.dart';
+import 'package:email_password_login/admin/eventDetail.dart';
 
-class TestHome extends StatefulWidget {
-  const TestHome({Key? key}) : super(key: key);
+import 'package:email_password_login/models/user_model.dart';
+import 'package:email_password_login/screens/allEvent.dart';
+import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/widgets/eventContainer.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import 'login_screen.dart';
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
-  State<TestHome> createState() => _TestHomeState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _TestHomeState extends State<TestHome> {
-  EventModel events = EventModel();
+class _MainScreenState extends State<MainScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+  int pageIndex = 0;
+
+  final pages = [
+    const HomeScreen(),
+    const AllEvent(),
+    // const Page3(),
+    // const Page4(),
+  ];
 
   @override
   void initState() {
     super.initState();
     FirebaseFirestore.instance
-        .collection("events")
-        .doc(events.id)
+        .collection("users")
+        .doc(user!.uid)
         .get()
         .then((value) {
-      events = EventModel.fromMap(value.data());
+      loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Welcome"),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 150,
-                child: Image.asset("assets/evento.png", fit: BoxFit.contain),
-              ),
-              const Text(
-                "Welcome Back",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text("HI, ${events.eventName.toString()}",
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  )),
-              Text("${events.eventCreatedAt}",
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  )),
-              const SizedBox(
-                height: 15,
-              ),
-              ActionChip(label: const Text("Logout"), onPressed: () {}),
-            ],
+    var now = new DateTime.now();
+    var thisweek = now.add(Duration(days: now.weekday));
+
+    var formatter = new DateFormat('dd/MM/yyyy');
+    String formattedDate = formatter.format(now);
+    String thisWeek = formatter.format(thisweek);
+    String greeting() {
+      var hour = DateTime.now().hour;
+      if (hour < 12) {
+        return 'Good Morning,';
+      }
+      if (hour < 17) {
+        return 'Good Afternoon,';
+      }
+      return 'Good Evening,';
+    }
+
+    Container buildMyNavBar(BuildContext context) {
+      return Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              enableFeedback: false,
+              onPressed: () {
+                setState(() {
+                  pageIndex = 0;
+                });
+              },
+              icon: pageIndex == 0
+                  ? const Icon(
+                      Icons.home_filled,
+                      color: Colors.black,
+                      size: 35,
+                    )
+                  : const Icon(
+                      Icons.home_outlined,
+                      color: Colors.black,
+                      size: 35,
+                    ),
+            ),
+            IconButton(
+              enableFeedback: false,
+              onPressed: () {
+                setState(() {
+                  pageIndex = 1;
+                });
+              },
+              icon: pageIndex == 1
+                  ? const Icon(
+                      Icons.event,
+                      color: Colors.black,
+                      size: 35,
+                    )
+                  : const Icon(
+                      Icons.event_outlined,
+                      color: Colors.black,
+                      size: 35,
+                    ),
+            ),
+            IconButton(
+              enableFeedback: false,
+              onPressed: () {
+                setState(() {
+                  pageIndex = 2;
+                });
+              },
+              icon: pageIndex == 2
+                  ? const Icon(
+                      Icons.book,
+                      color: Colors.black,
+                      size: 35,
+                    )
+                  : const Icon(
+                      Icons.book_outlined,
+                      color: Colors.black,
+                      size: 35,
+                    ),
+            ),
+            IconButton(
+              enableFeedback: false,
+              onPressed: () {
+                setState(() {
+                  pageIndex = 3;
+                });
+              },
+              icon: pageIndex == 3
+                  ? const Icon(
+                      Icons.chat_bubble_outline,
+                      color: Colors.black,
+                      size: 35,
+                    )
+                  : const Icon(
+                      Icons.chat_bubble_outline,
+                      color: Colors.black,
+                      size: 35,
+                    ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: ((overscroll) {
+        overscroll.disallowIndicator();
+        return true;
+      }),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: pages[pageIndex],
+        bottomNavigationBar: buildMyNavBar(context),
       ),
     );
+  }
+
+  // the logout function
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }

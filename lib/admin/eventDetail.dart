@@ -1,11 +1,37 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/models/event_models.dart';
+import 'package:email_password_login/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class detailPage extends StatelessWidget {
+class detailPage extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
+
   const detailPage({Key? key, required this.documentSnapshot})
       : super(key: key);
+
+  @override
+  State<detailPage> createState() => _detailPageState();
+}
+
+class _detailPageState extends State<detailPage> {
+  UserModel allUser = UserModel();
+  @override
+  void initState() {
+    User? user = FirebaseAuth.instance.currentUser;
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      allUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +66,7 @@ class detailPage extends StatelessWidget {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(documentSnapshot["url"]),
+                          image: NetworkImage(widget.documentSnapshot["url"]),
                         )),
                       ),
                     ),
@@ -65,14 +91,19 @@ class detailPage extends StatelessWidget {
                             radius: 32,
                             backgroundColor: Colors.black,
                             child: Text(
-                              documentSnapshot["eventCollege"],
+                              widget.documentSnapshot["eventCollege"],
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                               ),
                             ),
-                          )
+                          ),
+                          Text("HI, ${allUser.firstName}",
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                              )),
                         ],
                       ),
                     ),
@@ -84,7 +115,7 @@ class detailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            documentSnapshot["eventName"],
+                            widget.documentSnapshot["eventName"],
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 35,
@@ -101,7 +132,7 @@ class detailPage extends StatelessWidget {
                                 width: 7,
                               ),
                               Text(
-                                documentSnapshot["eventCategory"],
+                                widget.documentSnapshot["eventCategory"],
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -127,7 +158,7 @@ class detailPage extends StatelessWidget {
                               size: 15,
                             ),
                             Text(
-                              documentSnapshot["eventLocation"],
+                              widget.documentSnapshot["eventLocation"],
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontSize: 15,
@@ -136,7 +167,7 @@ class detailPage extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          documentSnapshot["eventDate"],
+                          widget.documentSnapshot["eventDate"],
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -172,7 +203,7 @@ class detailPage extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      documentSnapshot["eventDescription"],
+                      widget.documentSnapshot["eventDescription"],
                       style: TextStyle(
                         fontSize: 15,
                       ),

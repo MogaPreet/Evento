@@ -296,6 +296,7 @@ class _registrationState extends State<registration> {
     UserModel userModel = UserModel();
 
     userModel.email = user?.email;
+
     userModel.uid = user?.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.lastName = lastNameEditingController.text;

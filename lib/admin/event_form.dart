@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io' as io;
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/models/event_models.dart';
+import 'package:email_password_login/notification_service.dart';
 import 'package:file/file.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class createEvent extends StatefulWidget {
   const createEvent({Key? key}) : super(key: key);
@@ -27,15 +31,17 @@ class _createEventState extends State<createEvent> {
   String _dateCount = "";
   String _range = '';
   String _rangeCount = '';
+  String _endEvent = '';
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
-        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} '
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)}'
             '- ${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
-
+        _endEvent = '${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
         if (args.value.startDate == args.value.endDate) {
-          _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} ';
+          _range = '${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
+          _endEvent = '${DateFormat('dd/MM/yyyy').format(args.value.endDate)}';
         }
       } else if (args.value is DateTime) {
         _selectedDate = args.value.toString();
@@ -289,6 +295,7 @@ class _createEventState extends State<createEvent> {
             eventModel.eventCollege = dropdownvalue;
             eventModel.eventCategory = dropdownvaluecate;
             eventModel.eventDate = _range;
+            eventModel.eventEndDate = _endEvent;
             eventModel.eventFees = eventFeesController.text;
             eventModel.eventLocation = eventVenueController.text;
             eventModel.eventCreatedAt = Timestamp.now().toDate().toString();

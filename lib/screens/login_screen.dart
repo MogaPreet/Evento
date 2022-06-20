@@ -1,5 +1,7 @@
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/event_form.dart';
+import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/screens/homescreen.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (newuser == false) {
       Navigator.pushReplacement(
-          context, new MaterialPageRoute(builder: (context) => Dummy()));
+          context, new MaterialPageRoute(builder: (context) => MainScreen()));
     }
   }
 
@@ -113,7 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 20.0,
                   height: 20.0,
                   child: const CircularProgressIndicator(
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    color: Colors.white,
+                    strokeWidth: 2,
                   ),
                 )
               : const Text(
@@ -200,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successfully"),
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const createEvent())),
+                    builder: (context) => const MainScreen())),
               })
           .catchError((error) {
         switch (error.code) {

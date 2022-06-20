@@ -17,7 +17,7 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> {
   EventModel displayEvents = EventModel();
 
-  delteEvent(user) {
+  deleteUser(user) {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection("users").doc(user);
     documentReference.delete().whenComplete(
@@ -45,9 +45,9 @@ class _UsersState extends State<Users> {
             overscroll.disallowIndicator();
             return true;
           }),
-          child: StreamBuilder<QuerySnapshot>(
+          child: StreamBuilder(
             stream: FirebaseFirestore.instance.collection("users").snapshots(),
-            builder: (context, snapshot) {
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text('Something went wrong');
               } else if (snapshot.hasData || snapshot.data != null) {
@@ -56,7 +56,7 @@ class _UsersState extends State<Users> {
                     itemCount: snapshot.data?.docs.length,
                     itemBuilder: (BuildContext context, int index) {
                       QueryDocumentSnapshot<Object?>? documentSnapshot =
-                          snapshot.data?.docs[index];
+                          snapshot.data!.docs[index];
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -125,7 +125,7 @@ class _UsersState extends State<Users> {
                                 color: Colors.red,
                                 onPressed: () {
                                   setState(() {
-                                    delteEvent((documentSnapshot != null)
+                                    deleteUser((documentSnapshot != null)
                                         ? (documentSnapshot['uid'])
                                         : "");
                                   });

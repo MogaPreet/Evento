@@ -8,6 +8,7 @@ class EventModel {
   String? eventCollege;
   String? eventCategory;
   String? eventDate;
+  String? eventEndDate;
   String? eventFees;
   String? eventLocation;
   String? eventCreatedAt;
@@ -20,6 +21,7 @@ class EventModel {
       this.eventCollege,
       this.eventCategory,
       this.eventDate,
+      this.eventEndDate,
       this.eventFees,
       this.eventLocation,
       this.eventCreatedAt});
@@ -33,6 +35,7 @@ class EventModel {
         eventCollege: map['eventCollege'],
         eventCategory: map['eventCategory'],
         eventDate: map['eventDate'],
+        eventEndDate: map['eventEndDate'],
         eventFees: map['eventFees'],
         eventLocation: map['eventLocation'],
         eventCreatedAt: map['eventCreatedAt']);
@@ -46,6 +49,7 @@ class EventModel {
       'eventCollege': eventCollege,
       'eventCategory': eventCategory,
       'eventDate': eventDate,
+      'eventEndDate': eventEndDate,
       'eventFees': eventFees,
       'eventLocation': eventLocation,
       'eventCreatedAt': eventCreatedAt
