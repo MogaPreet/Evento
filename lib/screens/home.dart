@@ -3,6 +3,7 @@ import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/eventDetail.dart';
 
 import 'package:email_password_login/models/user_model.dart';
+import 'package:email_password_login/screens/Profile.dart';
 import 'package:email_password_login/widgets/eventContainer.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Dummy(),
+                                  builder: (context) => ProfileScreen(
+                                      FirstName: loggedInUser.firstName),
                                 ),
                               );
                             },

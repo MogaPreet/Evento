@@ -6,6 +6,7 @@ import 'package:email_password_login/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class detailPage extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
@@ -183,14 +184,33 @@ class _detailPageState extends State<detailPage> {
                         color: Colors.black,
                         child: MaterialButton(
                           child: Text(
-                            'Woww',
+                            'Im Intersted',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            String recipient = "preetmoga777@gmail.com";
+                            String subject = "Interseted In" +
+                                widget.documentSnapshot["eventName"];
+                            String body = "My Details: ";
+                            final Uri email = Uri(
+                              scheme: 'mailto',
+                              path: recipient,
+                              query: 'subject=' +
+                                  Uri.encodeComponent(subject) +
+                                  '&body=' +
+                                  Uri.encodeComponent(body),
+                            );
+
+                            if (await canLaunchUrl(email)) {
+                              await launchUrl(email);
+                            } else {
+                              debugPrint('error');
+                            }
+                          },
                         ),
                       ),
                     ),
