@@ -3,6 +3,7 @@ import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/eventDetail.dart';
 
 import 'package:email_password_login/models/user_model.dart';
+import 'package:email_password_login/screens/Profile.dart';
 import 'package:email_password_login/widgets/eventContainer.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +68,12 @@ class _PastAllEventState extends State<PastAllEvent> {
               Container(
                 height: 200,
                 padding: EdgeInsets.all(20),
-                color: Colors.black,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/pastevent.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -99,7 +105,8 @@ class _PastAllEventState extends State<PastAllEvent> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Dummy(),
+                                  builder: (context) => ProfileScreen(
+                                      FirstName: loggedInUser.firstName),
                                 ),
                               );
                             },

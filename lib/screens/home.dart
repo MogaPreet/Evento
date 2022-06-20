@@ -55,6 +55,19 @@ class _HomeScreenState extends State<HomeScreen> {
       return 'Good Evening,';
     }
 
+    sendAdminToConsole() {
+      return TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Dummy(),
+              ),
+            );
+          },
+          child: Text("Console"));
+    }
+
     return SafeArea(
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: ((overscroll) {
@@ -68,7 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 height: 200,
                 padding: EdgeInsets.all(20),
-                color: Colors.black,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/home.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -96,44 +114,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfileScreen(
-                                      FirstName: loggedInUser.firstName),
-                                ),
-                              );
-                            },
-                            child: CircleAvatar(
-                              radius: 20,
-                              child: Icon(Icons.person),
-                            ))
+                            child: (loggedInUser.email ==
+                                    "preetmoga777@gmail.com")
+                                ? sendAdminToConsole()
+                                : GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ProfileScreen(
+                                              FirstName:
+                                                  loggedInUser.firstName),
+                                        ),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      child: Icon(Icons.person),
+                                    ),
+                                  ))
                       ],
                     ),
-                    // TextField(
-                    //   decoration: InputDecoration(
-                    //     contentPadding: EdgeInsets.symmetric(vertical: 15),
-                    //     focusedBorder: OutlineInputBorder(
-                    //       borderSide: BorderSide(color: Colors.white, width: 0.5),
-                    //     ),
-                    //     enabledBorder: OutlineInputBorder(
-                    //       borderSide: BorderSide(color: Colors.white, width: 0.5),
-                    //     ),
-                    //     hintText: "Search",
-                    //     hintStyle: TextStyle(color: Colors.white),
-                    //     prefixIcon: Icon(Icons.search, color: Colors.white),
-                    //     suffixIcon: Icon(Icons.filter_list, color: Colors.white),
-                    //   ),
-                    //   onChanged: (val) {},
-                    // ),
-                    // Container(
-                    //   height: 50,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: buildCategoriesWidgets(),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -448,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           SizedBox(width: 20),
                                         ],
-                                      )
+                                      ),
                                     ],
                                   );
                                 },

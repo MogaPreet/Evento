@@ -100,11 +100,6 @@ class _detailPageState extends State<detailPage> {
                               ),
                             ),
                           ),
-                          Text("HI, ${allUser.firstName}",
-                              style: const TextStyle(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w500,
-                              )),
                         ],
                       ),
                     ),

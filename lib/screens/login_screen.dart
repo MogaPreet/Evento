@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     final loginButton = Material(
         elevation: 5,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
         color: Color.fromARGB(255, 0, 0, 0),
         child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: SizedBox(
                           width: 200.0,
                           child: Image.asset(
-                            "assets/evento.png",
+                            "assets/login.png",
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -204,7 +204,9 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successfully"),
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const MainScreen())),
+                    builder: (context) => (email == "preetmoga777@gmail.com")
+                        ? Dummy()
+                        : MainScreen())),
               })
           .catchError((error) {
         switch (error.code) {
