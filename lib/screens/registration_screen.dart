@@ -154,7 +154,7 @@ class _registrationState extends State<registration> {
 
     final signUpButton = Material(
         elevation: 5,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
         color: Color.fromARGB(255, 0, 0, 0),
         child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -200,7 +200,7 @@ class _registrationState extends State<registration> {
                         child: SizedBox(
                           width: 200.0,
                           child: Image.asset(
-                            "assets/evento.png",
+                            "assets/signup.png",
                             fit: BoxFit.contain,
                           ),
                         ),
