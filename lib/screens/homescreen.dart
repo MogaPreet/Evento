@@ -4,7 +4,10 @@ import 'package:email_password_login/admin/eventDetail.dart';
 
 import 'package:email_password_login/models/user_model.dart';
 import 'package:email_password_login/screens/allEvent.dart';
+import 'package:email_password_login/screens/chat/charMain.dart';
+import 'package:email_password_login/screens/chat/login.dart';
 import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/screens/pastEvent.dart';
 import 'package:email_password_login/widgets/eventContainer.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,13 +29,6 @@ class _MainScreenState extends State<MainScreen> {
 
   int pageIndex = 0;
 
-  final pages = [
-    const HomeScreen(),
-    const AllEvent(),
-    // const Page3(),
-    // const Page4(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -45,6 +41,13 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {});
     });
   }
+
+  final pages = [
+    const HomeScreen(),
+    const AllEvent(),
+    const PastAllEvent(),
+    const chatpage(),
+  ];
 
   @override
   Widget build(BuildContext context) {

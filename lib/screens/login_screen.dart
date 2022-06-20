@@ -1,5 +1,6 @@
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/event_form.dart';
+import 'package:email_password_login/screens/chat/charMain.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:email_password_login/screens/homescreen.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
