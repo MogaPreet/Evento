@@ -4,6 +4,7 @@ import 'package:email_password_login/screens/chat/charMain.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:email_password_login/screens/homescreen.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
+import 'package:email_password_login/screens/resetPassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -48,6 +49,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //forgot Password
+    Widget forgotPassword(BuildContext context) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 35,
+        alignment: Alignment.bottomRight,
+        child: TextButton(
+          child: Text(
+            "Forget Password?",
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              color: Colors.blue,
+            ),
+          ),
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ResetPassword())),
+        ),
+      );
+    }
+
     final emailField = TextFormField(
       autofocus: false,
       controller: emailController,
@@ -73,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(10),
           )),
     );
+
     final passwordField = TextFormField(
       autofocus: false,
       controller: passwordController,
@@ -161,7 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       passwordField,
                       const SizedBox(height: 35),
                       loginButton,
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 5),
+                      forgotPassword(context),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
