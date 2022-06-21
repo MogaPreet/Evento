@@ -1,5 +1,6 @@
 import 'package:email_password_login/admin/dummy.dart';
 import 'package:email_password_login/admin/event_form.dart';
+import 'package:email_password_login/screens/blockedUser.dart';
 import 'package:email_password_login/screens/chat/charMain.dart';
 import 'package:email_password_login/screens/home.dart';
 import 'package:email_password_login/screens/homescreen.dart';
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     checkAuth();
+    checkforblock();
     super.initState();
   }
 
@@ -44,6 +46,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (newuser == false) {
       Navigator.pushReplacement(
           context, new MaterialPageRoute(builder: (context) => MainScreen()));
+    }
+  }
+
+  checkforblock() async {
+    if (emailController.text == null) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.clear();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const blockedUser()));
     }
   }
 
@@ -225,6 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
+                checkforblock(),
                 Fluttertoast.showToast(msg: "Login Successfully"),
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => (email == "preetmoga777@gmail.com")

@@ -86,11 +86,15 @@ class _chatpageState extends State<chatpage> {
                 IconButton(
                   onPressed: () {
                     if (message.text.isNotEmpty) {
-                      fs.collection('Messages').doc().set({
-                        'message': message.text.trim(),
-                        'time': DateTime.now(),
-                        'email': loggedInUser.email,
-                      });
+                      (loggedInUser.email == null)
+                          ? Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()))
+                          : fs.collection('Messages').doc().set({
+                              'message': message.text.trim(),
+                              'time': DateTime.now(),
+                              'email': loggedInUser.email,
+                            });
 
                       message.clear();
                     }

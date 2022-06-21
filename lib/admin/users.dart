@@ -6,6 +6,7 @@ import 'package:email_password_login/models/event_models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Users extends StatefulWidget {
   const Users({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> {
   EventModel displayEvents = EventModel();
 
-  deleteUser(user) {
+  deleteUser(user) async {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection("users").doc(user);
     documentReference.delete().whenComplete(

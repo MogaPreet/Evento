@@ -4,11 +4,13 @@ import 'package:email_password_login/admin/eventDetail.dart';
 
 import 'package:email_password_login/models/user_model.dart';
 import 'package:email_password_login/screens/Profile.dart';
+import 'package:email_password_login/screens/blockedUser.dart';
 import 'package:email_password_login/widgets/eventContainer.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_screen.dart';
 
@@ -32,8 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
         .get()
         .then((value) {
       loggedInUser = UserModel.fromMap(value.data());
+
       setState(() {});
     });
+  }
+
+  checkforblock() async {
+    if (loggedInUser.email == null) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.clear();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const blockedUser()));
+    }
   }
 
   @override
@@ -71,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: ((overscroll) {
+          checkforblock();
           overscroll.disallowIndicator();
           return true;
         }),
@@ -135,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ))
                       ],
                     ),
+                    TextButton(
+                        onPressed: () => logout(context), child: Text("Logout"))
                   ],
                 ),
               ),
@@ -477,6 +492,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // the logout function
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }

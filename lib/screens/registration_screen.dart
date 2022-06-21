@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:email_password_login/models/user_model.dart';
 import 'package:email_password_login/screens/home.dart';
+import 'package:email_password_login/screens/homescreen.dart';
 
 import 'package:email_password_login/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -305,10 +306,10 @@ class _registrationState extends State<registration> {
         .collection("users")
         .doc(user?.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account Created Successfully");
+    Fluttertoast.showToast(msg: "Account Created Successfully, Please Login");
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false);
   }
 }

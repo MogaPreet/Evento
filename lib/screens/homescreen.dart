@@ -4,6 +4,7 @@ import 'package:email_password_login/admin/eventDetail.dart';
 
 import 'package:email_password_login/models/user_model.dart';
 import 'package:email_password_login/screens/allEvent.dart';
+import 'package:email_password_login/screens/blockedUser.dart';
 import 'package:email_password_login/screens/chat/charMain.dart';
 import 'package:email_password_login/screens/chat/login.dart';
 import 'package:email_password_login/screens/home.dart';
@@ -13,6 +14,7 @@ import 'package:email_password_login/widgets/eventContainer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_screen.dart';
 
@@ -32,12 +34,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
         .get()
         .then((value) {
       loggedInUser = UserModel.fromMap(value.data());
+
       setState(() {});
     });
   }
@@ -162,16 +166,10 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
 
-    return NotificationListener<OverscrollIndicatorNotification>(
-      onNotification: ((overscroll) {
-        overscroll.disallowIndicator();
-        return true;
-      }),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: pages[pageIndex],
-        bottomNavigationBar: buildMyNavBar(context),
-      ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: pages[pageIndex],
+      bottomNavigationBar: buildMyNavBar(context),
     );
   }
 
@@ -180,5 +178,7 @@ class _MainScreenState extends State<MainScreen> {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
+    final pref = await SharedPreferences.getInstance();
+    await pref.clear();
   }
 }
