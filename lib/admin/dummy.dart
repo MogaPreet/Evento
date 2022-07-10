@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/admin/eventDetail.dart';
 import 'package:email_password_login/admin/event_form.dart';
@@ -9,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class Dummy extends StatefulWidget {
   const Dummy({Key? key}) : super(key: key);
@@ -189,17 +192,29 @@ class _DummyState extends State<Dummy> {
                                     ],
                                   ),
                                 ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete),
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    setState(() {
-                                      delteEvent((documentSnapshot != null)
-                                          ? (documentSnapshot['id'])
-                                          : "");
-                                    });
-                                    setState(() {});
-                                  },
+                                trailing: Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.notification_add),
+                                      color: Colors.blue,
+                                      onPressed: () {
+                                        setState(() {});
+                                        setState(() {});
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        setState(() {
+                                          delteEvent((documentSnapshot != null)
+                                              ? (documentSnapshot['id'])
+                                              : "");
+                                        });
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
