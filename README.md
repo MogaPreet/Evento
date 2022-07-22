@@ -1,4 +1,4 @@
-# email_password_login
+# Evento-Event Notification App
 
 A new Flutter project.
 
